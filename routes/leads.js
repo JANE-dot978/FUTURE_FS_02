@@ -3,7 +3,7 @@ const router = express.Router();
 const Lead = require('../models/Lead');
 const auth = require('../middleware/auth');
 
-// All routes below are protected
+// All routes below a
 // GET all leads
 router.get('/', auth, async (req, res) => {
   try {
