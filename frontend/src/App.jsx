@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -8,13 +9,15 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
+  const [darkMode, setDarkMode] = useState(true);
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login darkMode={darkMode} />} />
         <Route path="/dashboard" element={
           <PrivateRoute>
-            <Dashboard />
+            <Dashboard darkMode={darkMode} setDarkMode={setDarkMode} />
           </PrivateRoute>
         } />
         <Route path="*" element={<Navigate to="/login" />} />
