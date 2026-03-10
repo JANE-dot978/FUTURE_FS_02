@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function LeadModal({ onClose, onSave, existingLead }) {
+function LeadModal({ onClose, onSave, existingLead, darkMode }) {
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -26,131 +26,170 @@ function LeadModal({ onClose, onSave, existingLead }) {
     onSave(form);
   };
 
+  const cardBg = darkMode ? '#1a1a1a' : '#ffffff';
+  const border = darkMode ? '#2a2a2a' : '#e0e0e0';
+  const textPrimary = darkMode ? '#ffffff' : '#111111';
+  const textSecondary = darkMode ? '#888' : '#555';
+  const inputBg = darkMode ? '#111' : '#f5f5f5';
+  const inputText = darkMode ? '#ffffff' : '#111111';
+
   return (
-    <div style={styles.overlay}>
-      <div style={styles.modal}>
-        <h2 style={styles.title}>
-          {existingLead ? 'Edit Lead' : 'Add New Lead'}
-        </h2>
+    <div style={{
+      position: 'fixed',
+      top: 0, left: 0, right: 0, bottom: 0,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+    }}>
+      <div style={{
+        backgroundColor: cardBg,
+        padding: '32px',
+        borderRadius: '16px',
+        width: '100%',
+        maxWidth: '480px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '14px',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+        border: `1px solid ${border}`,
+      }} className="pop-in">
 
-        <input
-          style={styles.input}
-          name="name"
-          placeholder="Full Name"
-          value={form.name}
-          onChange={handleChange}
-        />
-        <input
-          style={styles.input}
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-        />
-        <input
-          style={styles.input}
-          name="phone"
-          placeholder="Phone"
-          value={form.phone}
-          onChange={handleChange}
-        />
-        <input
-          style={styles.input}
-          name="source"
-          placeholder="Source"
-          value={form.source}
-          onChange={handleChange}
-        />
-        <select
-          style={styles.input}
-          name="status"
-          value={form.status}
-          onChange={handleChange}
-        >
-          <option value="new">New</option>
-          <option value="contacted">Contacted</option>
-          <option value="converted">Converted</option>
-          <option value="lost">Lost</option>
-        </select>
-        <textarea
-          style={{ ...styles.input, height: '80px', resize: 'none' }}
-          name="notes"
-          placeholder="Notes"
-          value={form.notes}
-          onChange={handleChange}
-        />
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ color: textPrimary, margin: 0, fontSize: '1.3rem', fontWeight: '700' }}>
+            {existingLead ? 'Edit Lead' : 'Add New Lead'}
+          </h2>
+          <button
+            onClick={onClose}
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              color: textSecondary,
+              fontSize: '1.2rem',
+              cursor: 'pointer',
+            }}
+          >✕</button>
+        </div>
 
-        <div style={styles.buttons}>
-          <button style={styles.cancelBtn} onClick={onClose}>
-            Cancel
-          </button>
-          <button style={styles.saveBtn} onClick={handleSave}>
-            {existingLead ? 'Update' : 'Add Lead'}
-          </button>
+        {/* Fields */}
+        {[
+          { name: 'name', placeholder: 'Full Name', type: 'text' },
+          { name: 'email', placeholder: 'Email Address', type: 'email' },
+          { name: 'phone', placeholder: 'Phone Number', type: 'text' },
+          { name: 'source', placeholder: 'Lead Source', type: 'text' },
+        ].map((field) => (
+          <div key={field.name}>
+            <label style={{ color: textSecondary, fontSize: '0.8rem', fontWeight: '600', display: 'block', marginBottom: '6px' }}>
+              {field.placeholder}
+            </label>
+            <input
+              type={field.type}
+              name={field.name}
+              placeholder={field.placeholder}
+              value={form[field.name]}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '10px 14px',
+                borderRadius: '8px',
+                border: `1px solid ${border}`,
+                backgroundColor: inputBg,
+                color: inputText,
+                fontSize: '0.95rem',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+            />
+          </div>
+        ))}
+
+        {/* Status */}
+        <div>
+          <label style={{ color: textSecondary, fontSize: '0.8rem', fontWeight: '600', display: 'block', marginBottom: '6px' }}>
+            Status
+          </label>
+          <select
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '10px 14px',
+              borderRadius: '8px',
+              border: `1px solid ${border}`,
+              backgroundColor: inputBg,
+              color: inputText,
+              fontSize: '0.95rem',
+              outline: 'none',
+              boxSizing: 'border-box',
+            }}
+          >
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="converted">Converted</option>
+            <option value="lost">Lost</option>
+          </select>
+        </div>
+
+        {/* Notes */}
+        <div>
+          <label style={{ color: textSecondary, fontSize: '0.8rem', fontWeight: '600', display: 'block', marginBottom: '6px' }}>
+            Notes
+          </label>
+          <textarea
+            name="notes"
+            placeholder="Add notes about this lead..."
+            value={form.notes}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '10px 14px',
+              borderRadius: '8px',
+              border: `1px solid ${border}`,
+              backgroundColor: inputBg,
+              color: inputText,
+              fontSize: '0.95rem',
+              outline: 'none',
+              height: '80px',
+              resize: 'none',
+              boxSizing: 'border-box',
+            }}
+          />
+        </div>
+
+        {/* Buttons */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '4px' }}>
+          <button
+            onClick={onClose}
+            style={{
+              padding: '10px 20px',
+              borderRadius: '8px',
+              border: `1px solid ${border}`,
+              backgroundColor: 'transparent',
+              color: textSecondary,
+              cursor: 'pointer',
+              fontWeight: '600',
+            }}
+          >Cancel</button>
+          <button
+            onClick={handleSave}
+            style={{
+              padding: '10px 24px',
+              borderRadius: '8px',
+              border: 'none',
+              background: 'linear-gradient(135deg, #e8c547, #f0d060)',
+              color: '#000',
+              fontWeight: '700',
+              cursor: 'pointer',
+              fontSize: '0.95rem',
+            }}
+          >{existingLead ? 'Update Lead' : 'Add Lead'}</button>
         </div>
       </div>
     </div>
   );
 }
-
-const styles = {
-  overlay: {
-    position: 'fixed',
-    top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000,
-  },
-  modal: {
-    backgroundColor: '#1a1a1a',
-    padding: '32px',
-    borderRadius: '12px',
-    width: '100%',
-    maxWidth: '480px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-    boxShadow: '0 0 40px rgba(0,0,0,0.6)',
-  },
-  title: {
-    color: '#e8c547',
-    margin: 0,
-  },
-  input: {
-    padding: '10px',
-    borderRadius: '8px',
-    border: '1px solid #333',
-    backgroundColor: '#111',
-    color: '#fff',
-    fontSize: '0.95rem',
-    width: '100%',
-    boxSizing: 'border-box',
-  },
-  buttons: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: '12px',
-    marginTop: '8px',
-  },
-  cancelBtn: {
-    padding: '10px 20px',
-    borderRadius: '8px',
-    border: '1px solid #555',
-    backgroundColor: 'transparent',
-    color: '#aaa',
-    cursor: 'pointer',
-  },
-  saveBtn: {
-    padding: '10px 20px',
-    borderRadius: '8px',
-    border: 'none',
-    backgroundColor: '#e8c547',
-    color: '#000',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-  },
-};
 
 export default LeadModal;
