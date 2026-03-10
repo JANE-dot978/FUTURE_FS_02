@@ -1,52 +1,99 @@
 import StatusBadge from './StatusBadge';
 
-function LeadTable({ leads, onEdit, onDelete }) {
+function LeadTable({ leads, onEdit, onDelete, darkMode }) {
+  const cardBg = darkMode ? '#1a1a1a' : '#ffffff';
+  const border = darkMode ? '#2a2a2a' : '#e5e5e5';
+  const textPrimary = darkMode ? '#cccccc' : '#111111';
+  const headerColor = darkMode ? '#e8c547' : '#333333';
+  const rowHover = darkMode ? '#1f1f1f' : '#f9f9f9';
+
   if (leads.length === 0) {
     return (
-      <div style={styles.empty}>
-        <p>No leads found. Add your first lead!</p>
+      <div style={{
+        textAlign: 'center',
+        padding: '60px',
+        backgroundColor: cardBg,
+        borderRadius: '16px',
+        border: `1px solid ${border}`,
+        color: textPrimary,
+      }}>
+        <p style={{ fontSize: '2rem' }}>📋</p>
+        <p style={{ marginTop: '8px' }}>No leads found. Add your first lead!</p>
       </div>
     );
   }
 
   return (
-    <div style={styles.tableWrapper}>
-      <table style={styles.table}>
+    <div style={{
+      overflowX: 'auto',
+      borderRadius: '12px',
+      border: `1px solid ${border}`,
+    }}>
+      <table style={{
+        width: '100%',
+        borderCollapse: 'collapse',
+        backgroundColor: cardBg,
+      }}>
         <thead>
           <tr>
-            <th style={styles.th}>Name</th>
-            <th style={styles.th}>Email</th>
-            <th style={styles.th}>Phone</th>
-            <th style={styles.th}>Source</th>
-            <th style={styles.th}>Status</th>
-            <th style={styles.th}>Notes</th>
-            <th style={styles.th}>Actions</th>
+            {['Name', 'Email', 'Phone', 'Source', 'Status', 'Notes', 'Actions'].map((h) => (
+              <th key={h} style={{
+                padding: '14px 16px',
+                textAlign: 'left',
+                color: headerColor,
+                borderBottom: `1px solid ${border}`,
+                fontWeight: '700',
+                whiteSpace: 'nowrap',
+                fontSize: '0.9rem',
+              }}>{h}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
           {leads.map((lead) => (
-            <tr key={lead._id} style={styles.tr}>
-              <td style={styles.td}>{lead.name}</td>
-              <td style={styles.td}>{lead.email}</td>
-              <td style={styles.td}>{lead.phone}</td>
-              <td style={styles.td}>{lead.source}</td>
-              <td style={styles.td}>
+            <tr key={lead._id} style={{
+              borderBottom: `1px solid ${border}`,
+              backgroundColor: cardBg,
+            }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = rowHover}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = cardBg}
+            >
+              <td style={{ padding: '12px 16px', color: textPrimary, fontSize: '0.9rem', fontWeight: '600' }}>{lead.name}</td>
+              <td style={{ padding: '12px 16px', color: textPrimary, fontSize: '0.9rem' }}>{lead.email}</td>
+              <td style={{ padding: '12px 16px', color: textPrimary, fontSize: '0.9rem' }}>{lead.phone}</td>
+              <td style={{ padding: '12px 16px', color: textPrimary, fontSize: '0.9rem' }}>{lead.source}</td>
+              <td style={{ padding: '12px 16px' }}>
                 <StatusBadge status={lead.status} />
               </td>
-              <td style={styles.td}>{lead.notes}</td>
-              <td style={styles.td}>
+              <td style={{ padding: '12px 16px', color: textPrimary, fontSize: '0.9rem' }}>{lead.notes}</td>
+              <td style={{ padding: '12px 16px' }}>
                 <button
-                  style={styles.editBtn}
                   onClick={() => onEdit(lead)}
-                >
-                  Edit
-                </button>
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    backgroundColor: '#4ecca3',
+                    color: '#000',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    marginRight: '8px',
+                    fontSize: '0.85rem',
+                  }}
+                >Edit</button>
                 <button
-                  style={styles.deleteBtn}
                   onClick={() => onDelete(lead._id)}
-                >
-                  Delete
-                </button>
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    backgroundColor: '#ff4444',
+                    color: '#fff',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    fontSize: '0.85rem',
+                  }}
+                >Delete</button>
               </td>
             </tr>
           ))}
@@ -55,58 +102,5 @@ function LeadTable({ leads, onEdit, onDelete }) {
     </div>
   );
 }
-
-const styles = {
-  tableWrapper: {
-    overflowX: 'auto',
-    borderRadius: '12px',
-    border: '1px solid #333',
-  },
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    backgroundColor: '#1a1a1a',
-  },
-  th: {
-    padding: '14px 16px',
-    textAlign: 'left',
-    color: '#e8c547',
-    borderBottom: '1px solid #333',
-    fontWeight: 'bold',
-    whiteSpace: 'nowrap',
-  },
-  tr: {
-    borderBottom: '1px solid #222',
-  },
-  td: {
-    padding: '12px 16px',
-    color: '#ccc',
-    fontSize: '0.9rem',
-  },
-  editBtn: {
-    padding: '6px 14px',
-    borderRadius: '6px',
-    border: 'none',
-    backgroundColor: '#4ecca3',
-    color: '#000',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    marginRight: '8px',
-  },
-  deleteBtn: {
-    padding: '6px 14px',
-    borderRadius: '6px',
-    border: 'none',
-    backgroundColor: '#ff4444',
-    color: '#fff',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-  },
-  empty: {
-    textAlign: 'center',
-    padding: '40px',
-    color: '#aaa',
-  },
-};
 
 export default LeadTable;
