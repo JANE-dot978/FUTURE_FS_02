@@ -6,8 +6,8 @@ A full-stack Client Lead Management System (Mini CRM) built as part of the Futur
 
 ##  Live Demo
 
-- **Frontend:** Coming soon (Netlify)
-- **Backend API:** Coming soon (Render)
+- **Frontend:** https://janegathu-crm.netlify.app
+- **Backend API:** https://janegathu-crm-api.onrender.com
 
 ---
 
