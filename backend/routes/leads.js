@@ -1,53 +1,67 @@
 const express = require('express');
 const router = express.Router();
-const Lead = require('../models/Lead');
 const auth = require('../middleware/auth');
+const Lead = require('../models/Lead');
 
-// All routes below a
 // GET all leads
 router.get('/', auth, async (req, res) => {
   try {
     const leads = await Lead.find().sort({ createdAt: -1 });
     res.json(leads);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// POST create a new lead
-router.post('/', auth, async (req, res) => {
+// POST create lead (public - no auth - from contact form)
+router.post('/', async (req, res) => {
   try {
-    const lead = new Lead(req.body);
+    const { name, email, phone, source, status, message } = req.body;
+    const lead = new Lead({
+      name,
+      email,
+      phone,
+      source: source || 'Website Form',
+      status: status || 'new',
+      notes: message ? [{ text: message }] : []
+    });
     await lead.save();
     res.status(201).json(lead);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// PUT update a lead
+// PUT update lead status/details
 router.put('/:id', auth, async (req, res) => {
   try {
-    const lead = await Lead.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (!lead) return res.status(404).json({ message: 'Lead not found.' });
+    const lead = await Lead.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(lead);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// DELETE a lead
+// POST add a follow-up note to a lead
+router.post('/:id/notes', auth, async (req, res) => {
+  try {
+    const lead = await Lead.findById(req.params.id);
+    if (!lead) return res.status(404).json({ message: 'Lead not found' });
+    lead.notes.push({ text: req.body.text });
+    await lead.save();
+    res.json(lead);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// DELETE lead
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const lead = await Lead.findByIdAndDelete(req.params.id);
-    if (!lead) return res.status(404).json({ message: 'Lead not found.' });
-    res.json({ message: 'Lead deleted successfully.' });
+    await Lead.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Lead deleted' });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 

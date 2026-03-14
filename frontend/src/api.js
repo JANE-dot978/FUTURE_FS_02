@@ -1,20 +1,20 @@
 import axios from 'axios';
 
-const API = axios.create({
-  baseURL: 'https://janegathu-crm-api.onrender.com/api',
+const api = axios.create({
+  baseURL: 'https://janegathu-crm-api.onrender.com/api'
 });
 
-// Attach token to every request automatically
-API.interceptors.request.use((req) => {
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
-  }
-  return req;
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
 });
 
-export const loginAdmin = (data) => API.post('/auth/login', data);
-export const getLeads = () => API.get('/leads');
-export const createLead = (data) => API.post('/leads', data);
-export const updateLead = (id, data) => API.put(`/leads/${id}`, data);
-export const deleteLead = (id) => API.delete(`/leads/${id}`);
+export const loginAdmin = (data) => api.post('/auth/login', data);
+export const getLeads = () => api.get('/leads');
+export const createLead = (data) => api.post('/leads', data);
+export const updateLead = (id, data) => api.put(`/leads/${id}`, data);
+export const deleteLead = (id) => api.delete(`/leads/${id}`);
+export const addNote = (id, text) => api.post(`/leads/${id}/notes`, { text });
+
+export default api;
