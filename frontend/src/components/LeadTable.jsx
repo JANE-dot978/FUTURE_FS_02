@@ -65,7 +65,23 @@ function LeadTable({ leads, onEdit, onDelete, darkMode }) {
               <td style={{ padding: '12px 16px' }}>
                 <StatusBadge status={lead.status} />
               </td>
-              <td style={{ padding: '12px 16px', color: textPrimary, fontSize: '0.9rem' }}>{lead.notes}</td>
+              <td style={{ padding: '12px 16px', color: textPrimary, fontSize: '0.9rem' }}>
+                {lead.notes && lead.notes.length > 0
+                  ? <span style={{
+                      background: 'rgba(232,197,71,0.1)',
+                      color: '#e8c547',
+                      padding: '3px 10px',
+                      borderRadius: '20px',
+                      fontSize: '0.8rem',
+                      fontWeight: '600',
+                    }}>
+                      📝 {lead.notes.length} note{lead.notes.length > 1 ? 's' : ''}
+                    </span>
+                  : <span style={{ color: darkMode ? '#444' : '#bbb', fontStyle: 'italic', fontSize: '0.8rem' }}>
+                      No notes
+                    </span>
+                }
+              </td>
               <td style={{ padding: '12px 16px' }}>
                 <button
                   onClick={() => onEdit(lead)}

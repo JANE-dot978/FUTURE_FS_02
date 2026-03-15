@@ -35,6 +35,8 @@ export default function ContactForm() {
     btn: { width: '100%', background: '#e8c547', color: '#111', border: 'none', borderRadius: '8px', padding: '0.9rem', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer' },
     success: { background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: '8px', padding: '1rem', color: '#22c55e', textAlign: 'center', marginBottom: '1rem', fontSize: '0.9rem' },
     error: { background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', padding: '1rem', color: '#ef4444', textAlign: 'center', marginBottom: '1rem', fontSize: '0.9rem' },
+    adminLink: { textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: '#888' },
+adminAnchor: { color: '#e8c547', fontWeight: '700', textDecoration: 'none', fontSize: '0.9rem' },
   };
 
   return (
@@ -71,6 +73,11 @@ export default function ContactForm() {
             {loading ? 'Sending...' : 'Send Message →'}
           </button>
         </form>
+
+        <p style={styles.adminLink}>
+          Are you the admin?{' '}
+          <a href="/login" style={styles.adminAnchor}>Login here →</a>
+        </p>
       </div>
     </div>
   );
